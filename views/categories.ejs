@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categories</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <div class="container mt-4">
+    <h1>Categories</h1>
+    <form action="/categories" method="POST">
+      <input type="text" name="name" class="form-control mb-3" placeholder="Category Name">
+      <button type="submit" class="btn btn-primary">Add Category</button>
+    </form>
+    <ul class="list-group mt-3">
+      <% categories.forEach(category => { %>
+        <li class="list-group-item">
+          <%= category.name %>
+          <form action="/categories/update/<%= category.id %>" method="POST" style="display:inline;">
+            <input type="text" name="name" value="<%= category.name %>" class="form-control d-inline-block" style="width: 200px;">
+            <button type="submit" class="btn btn-warning btn-sm">Update</button>
+          </form>
+          <form action="/categories/delete/<%= category.id %>" method="POST" style="display:inline;">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <div class="container mt-4">
+    <h1>Products</h1>
+    
+    <!-- Add Product Button -->
+    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addProductModal">Add Product</button>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add Product</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form action="/products" method="POST">
+            <div class="modal-body">
+              <div class="form-group">
+                <input type="text" name="name" class="form-control" placeholder="Product Name" required>
+              </div>
+              <div class="form-group">
+                <select name="category_id" class="form-control" required>
+                  <option value="">Select Category</option>
+                  <% categories.forEach(category => { %>
+                    <option value="<%= category.id %>"><%= category.name %></option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Add Product</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product List -->
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>Product Name</th>
+          <th>Category Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.forEach(product => { %>
+          <tr>
+            <td><%= product.id %></td>
+            <td><%= product.productName %></td>
+            <td><%= product.categoryName %></td>
+            <td>
+              <button class="btn btn-warning btn-sm edit-btn" data-id="<%= product.id %>" data-name="<%= product.productName %>" data-category="<%= product.category_id %>" data-toggle="modal" data-target="#editProductModal">Edit</button>
+              <form action="/products/delete/<%= product.id %>" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+<div class="d-flex justify-content-between mt-3">
+    <a href="/products/<%= currentPage - 1 %>" class="btn btn-secondary" <% if (currentPage <= 1) { %>disabled<% } %> >Previous</a>
+    <span>Page <%= currentPage %> of <%= totalPages %></span>
+    <a href="/products/<%= currentPage + 1 %>" class="btn btn-secondary" <% if (currentPage >= totalPages) { %>disabled<% } %> >Next</a>
+  </div>
+  
+
+    <!-- Edit Product Modal -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Product</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="editProductForm" method="POST">
+            <div class="modal-body">
+              <div class="form-group">
+                <input type="hidden" name="id" id="editProductId">
+                <input type="text" name="name" id="editProductName" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <select name="category_id" id="editCategoryId" class="form-control" required>
+                  <option value="">Select Category</option>
+                  <% categories.forEach(category => { %>
+                    <option value="<%= category.id %>"><%= category.name %></option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Update Product</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/js/script.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
